@@ -16,13 +16,23 @@ async function main() {
   const mensaje = await preguntar("Ingrese el mensaje a transmitir: ");
   const tamMarco = parseInt(await preguntar("Tamaño de cada marco: "), 10);
 
-  const receptor = new Receptor();
+  const receptor = new Receptor(tamMarco);
   const transmisor = new Transmisor(receptor);
 
   const marcos = [];
   let contador = 0;
+  
   for (let i = 0; i < mensaje.length; i += tamMarco) {
-    marcos.push(new Marco(contador++, mensaje.slice(i, i + tamMarco)));
+    let datoMarco = mensaje.slice(i, i + tamMarco);
+    
+    // Rellenar con padding si es necesario
+    if (datoMarco.length < tamMarco) {
+      const padding = '\0'.repeat(tamMarco - datoMarco.length);
+      datoMarco += padding;
+      console.log(`[INFO] Marco #${contador} rellenado con ${tamMarco - mensaje.slice(i, i + tamMarco).length} bytes de padding`);
+    }
+    
+    marcos.push(new Marco(contador++, datoMarco));
   }
 
   console.log("\n=== Transmisión iniciada ===");
@@ -47,6 +57,7 @@ async function main() {
   }
 
   console.log("\n=== Transmisión finalizada ===");
+  console.log("\n[INFO] Mensaje reconstruido:", receptor.obtenerMensaje());
   rl.close();
 }
 
