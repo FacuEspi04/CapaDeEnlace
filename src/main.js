@@ -42,7 +42,13 @@ async function main() {
     let intentos = 0;
 
     while (!exito && intentos < 3) {
-      exito = await transmisor.enviarMarco({ ...marco });
+      // Crear copia profunda del marco para cada intento
+      const copiaMarco = {
+        numero: marco.numero,
+        datos: marco.datos,
+        checksum: marco.checksum
+      };
+      exito = await transmisor.enviarMarco(copiaMarco);
       if (!exito) {
         console.log(`[TX] Reintentando envío de marco #${marco.numero}...`);
         intentos++;

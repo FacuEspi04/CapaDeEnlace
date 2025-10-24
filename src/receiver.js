@@ -8,6 +8,8 @@ export class Receptor {
 
   recibirMarco(marco) {
     const checksumCalculado = calcularChecksum(marco.datos);
+    console.log(`[DEBUG RX] Datos recibidos: "${marco.datos}" | Checksum recibido: ${marco.checksum} | Checksum calculado: ${checksumCalculado}`);
+    
     if (checksumCalculado !== marco.checksum) {
       console.log(`[RX] Error en el marco #${marco.numero}`);
       return false;

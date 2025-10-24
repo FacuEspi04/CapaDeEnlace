@@ -15,14 +15,21 @@ export class Transmisor {
     }
 
     // Simular error en transmisión (daño en los datos)
-    // Se crea una copia para no modificar el original
-    const marcoTransmitido = { ...marco };
+    // Se crea una copia profunda para no modificar el original
+    const marcoTransmitido = {
+      numero: marco.numero,
+      datos: marco.datos,
+      checksum: marco.checksum
+    };
     
     if (hayError()) {
       // Dañar los datos pero NO recalcular el checksum
       // Esto simula corrupción en el medio de transmisión
+      const datosOriginales = marcoTransmitido.datos;
       marcoTransmitido.datos = marcoTransmitido.datos.split("").reverse().join("");
       console.log(`[!] Marco #${marco.numero} sufrió corrupción durante la transmisión.`);
+      console.log(`[DEBUG] Datos originales: "${datosOriginales}" | Datos corruptos: "${marcoTransmitido.datos}"`);
+      console.log(`[DEBUG] Checksum enviado: ${marcoTransmitido.checksum}`);
     }
 
     // Simular tiempo de transmisión
